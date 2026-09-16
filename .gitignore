@@ -1,0 +1,7 @@
+.venv/
+.databricks/
+.claude/
+typings/
+__pycache__/
+*.pyc
+.vscode/

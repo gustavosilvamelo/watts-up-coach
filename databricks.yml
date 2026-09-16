@@ -1,0 +1,29 @@
+bundle:
+  name: watts-up-coach
+
+workspace:
+  host: https://dbc-72b61f75-d522.cloud.databricks.com
+
+targets:
+  dev:
+    mode: development
+    default: true
+    workspace:
+      host: https://dbc-72b61f75-d522.cloud.databricks.com
+      root_path: /Workspace/Users/${workspace.current_user.userName}/.bundle/${bundle.name}/dev
+
+  qa:
+    mode: production
+    workspace:
+      host: https://dbc-72b61f75-d522.cloud.databricks.com
+      root_path: /Workspace/Users/${workspace.current_user.userName}/.bundle/${bundle.name}/qa
+    run_as:
+      service_principal_name: d2dcda64-d921-479a-a971-1944d7c0f749
+
+  prod:
+    mode: production
+    workspace:
+      host: https://dbc-72b61f75-d522.cloud.databricks.com
+      root_path: /Workspace/Users/${workspace.current_user.userName}/.bundle/${bundle.name}/prod
+    run_as:
+      service_principal_name: d2dcda64-d921-479a-a971-1944d7c0f749

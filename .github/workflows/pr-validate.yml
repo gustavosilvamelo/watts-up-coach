@@ -1,0 +1,29 @@
+name: Validate bundle (PR)
+
+on:
+  pull_request:
+    branches: [develop, qa, main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    env:
+      DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+      DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
+      DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: databricks/setup-cli@main
+
+      - name: Select target from base branch
+        id: target
+        run: |
+          case "${{ github.base_ref }}" in
+            main) echo "target=prod" >> "$GITHUB_OUTPUT" ;;
+            qa) echo "target=qa" >> "$GITHUB_OUTPUT" ;;
+            *) echo "target=dev" >> "$GITHUB_OUTPUT" ;;
+          esac
+
+      - name: Validate bundle
+        run: databricks bundle validate -t ${{ steps.target.outputs.target }}
