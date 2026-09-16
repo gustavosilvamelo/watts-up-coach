@@ -4,6 +4,31 @@ Chronological log of load-bearing project decisions. Newest entries at the top. 
 
 ---
 
+## 2026-09-16 — Deep-research refinement of premises 2-6
+
+**Trigger.** After committing the first cross-analysis (premises 2 through 6 in `docs/premises.md`) a deep-research pass was launched with two agents to find peer-reviewed and vendor-technical backing for the questions the analysis had opened. Both agents returned dense, verifiable content.
+
+**Sources ingested into this refinement.**
+
+- Agent A (peer-reviewed only, evidence tier + guardrails + habit formation): GRADE framework (Guyatt 2008; Balshem 2011), PAR-Q+ and ePARmed-X+ (Warburton 2011; Bredin 2013), ACSM pre-participation update (Riebe 2015), ESC leisure-athlete screening (Corrado 2011), sports SCA epidemiology (Marijon 2015), REDs CAT2 (Mountjoy 2023), disordered eating in endurance (Sundgot-Borgen 2004; Karrer 2023), overuse injury instrument (Clarsen 2013 OSTRC), habit formation (Kaushal & Rhodes 2015; Lally 2010; SRHI Verplanken & Orbell 2003), intention–behaviour gap (Rhodes & de Bruijn 2013), BCTv1 (Michie 2013; Bird 2013), detraining (Coyle 1984; Mujika 2000), engagement vs outcome (Torous 2018; Baumel 2019; Mohr 2017).
+- Agent B (mixed sources for engineering; official sites for certifications): USA Cycling / British Cycling / UCI / AusCycling / CBC certification structure; ACSM-CEP, CSEP-CEP, BASES, NSCA CSCS clinical certifications; Databricks Vector Search + Unity Catalog governance patterns; Retraction Watch via Crossref API; PubMed E-utilities ingestion; predatory-journal filters (Cabell's, Beall's lists); Anthropic Contextual Retrieval (49 % retrieval-failure reduction); MLflow model registry semver aliases; Willison's lethal-trifecta rule (private data + untrusted content + external-communication tools).
+
+**Refinements applied.**
+
+- **Premise 2** rewritten to align with the GRADE 4-tier structure (high / moderate / low / very low) with the applicability caveat that GRADE has not been validated for individualized coaching. Added §2a naming the five sub-domains where peer-reviewed evidence is thin (uncertainty communication, elite-to-amateur extrapolation, adherence resilience, digital sycophancy, cycling-specific amateur adherence predictors) — these are labeled `low` or `very low` and never as consensus.
+- **Premise 3** now names the validated screening instruments (PAR-Q+, Riebe/ACSM 2015, Corrado/ESC 2011, REDs CAT2, OSTRC) and cites peer-reviewed backing for every red-flag.
+- **Premise 4** now specifies the ingestion path (NLM E-utilities), the ingestion-time quality filters (PubMed/SCOPUS/Web of Science/DOAJ allowlist + Cabell's/Beall's blacklist + Crossref DOI resolution), chunking rules (atomic abstract, structural chunking, Anthropic Contextual Retrieval), the MLflow-based versioning strategy, the nightly Retraction Watch check via Crossref API, and the MCP lethal-trifecta rule.
+- **Premise 5** rewritten as a three-tier map (High / Medium / Low) with named certifications and the rule that Low-tier content may only be used as narrative connective tissue (`very low` evidence).
+- **Premise 6** now cites Torous 2018 / Baumel 2019 / Mohr 2017 as the digital-mental-health analogue to sycophancy.
+- **Design §5** gained mandatory PAR-Q+ / ACSM / ESC onboarding, REDs and OSTRC quarterly, SRHI monthly.
+- **Design §6** output format now emits GRADE-aligned evidence tiers and BCT tags (Michie 2013), with an explicit directness qualifier for the tropical amateur HR-only case.
+- **Design §7** gained the no-punishment rule (Lally 2010; Rhodes & de Bruijn 2013) and the periodic BCT audit.
+- **Design §12** (new) lists the five accepted evidence gaps openly, mirroring Premise 2a.
+
+**Why this batch and not more.** The refinements stop at concrete instruments and tier mappings. Runtime orchestration details (retrieval pipeline shape, retriever weights, evaluation harness) are left to implementation. The premises now have enough grip to prevent silent quality drift without turning into a runbook.
+
+---
+
 ## 2026-09-16 — Cross-analysis of premises against research
 
 **Trigger.** After completing the second research pass (`training-science-extended.md`, `coaching-tools-market-scan-addendum.md`), a review of Premise 1 (evidence quality) against the accumulated research and design surfaced concrete gaps.

@@ -103,6 +103,21 @@ Based on `training-science-extended.md` §2 (behavior) and §3 (noise variables)
 - Power meter availability (drives HR-only fallback path).
 - **Context anchor** — typical time-of-day and location of training. Feeds the habit-formation model (Kaushal & Rhodes 2015, `training-science-extended.md` §2): repetition in a cue-consistent setting is a stronger predictor of habit strength than motivation. The prescription engine tries to keep prescriptions consistent with the anchor and flags proposals that would break it.
 
+**Mandatory onboarding assessments (Premise 3).**
+
+- PAR-Q+ (Warburton et al. 2011). Any positive answer routes to ePARmed-X+ or medical clearance before prescription starts.
+- ACSM pre-participation algorithm (Riebe et al. 2015, *MSSE*, PMID 26473759).
+- ESC leisure-athlete criteria for men > 35 with cardiovascular risk factors (Corrado et al. 2011, PMID 21278396).
+
+**Periodic assessments — every 12 weeks (Premise 3).**
+
+- REDs CAT2 three-step check (Mountjoy et al. 2023 *BJSM*, PMID 37752011).
+- OSTRC overuse questionnaire (Clarsen et al. 2013 *BJSM*, PMID 23038786).
+
+**Every 4 weeks.**
+
+- Self-Report Habit Index (SRHI, 12 items, Verplanken & Orbell 2003, *J Appl Soc Psychol* 33(6):1313). Tracks habit-strength trajectory against the Kaushal & Rhodes target (4 sessions/week for 6+ weeks in a stable context).
+
 **Explicitly not ingested (excluded by premise + peer-review evidence).**
 
 - Single-day resting HR (Buchheit 2014).
@@ -138,9 +153,10 @@ Reranker + Reciprocal Rank Fusion unify results. Top-k is trimmed before it reac
 - Data snapshot used (CTL, HRV weekly trend, last-session load, days to target).
 - Cohort comparison (when available).
 - Peer-reviewed citation(s) supporting the choice of stimulus.
-- **Evidence tier per rationale line** (Premise 2 — peer-reviewed / qualified-coach / cohort observational / individual / model inference).
-- **Confidence level** — high / medium / low based on how directly the cited evidence applies to the athlete's context. HR-only prescriptions for amateur cyclists in tropical conditions are tagged `confidence: low` until the peer-review base grows (`training-science-extended.md` §1 gap note).
-- `insufficient_evidence: true` block when no tier ≤ 3 supports the claim.
+- **GRADE-aligned evidence tier per rationale line** (Premise 2 — high / moderate / low / very low), including the qualified-coach tier (Premise 5) when a coach synthesis backs the claim.
+- **Directness qualifier.** HR-only prescriptions for amateur cyclists in tropical conditions default to at most `moderate` (extrapolation from temperate / power-based studies) unless a peer-reviewed source directly matches the context.
+- `insufficient_evidence: true` block when no tier ≥ `low` supports the claim.
+- **BCT tag** (Michie et al. 2013, *Ann Behav Med* 46:81, PMID 23512568) — which behaviour-change technique the prescription uses (goal setting, self-monitoring, feedback on performance, social support are the cycling-relevant ones per Bird et al. 2013, *Health Psychol* 32:829, PMID 23477577). Enables later audit of which BCTs correlate with outcome.
 
 **Delivery.** Phase 1: chat with the athlete pushes the workout block for copy-paste. Phase 2: automated push to Intervals.icu via their API. Falls back gracefully if the API path fails.
 
@@ -152,6 +168,10 @@ Reranker + Reciprocal Rank Fusion unify results. Top-k is trimmed before it reac
 - **Satisfaction track.** Fed by conversational sentiment, thumbs, comments. Used strictly for UX telemetry — never merged into training features.
 
 When the tracks disagree — the athlete loved a workout that peer-reviewed evidence says is under-stimulating for their phase — the engine prescribes what the evidence supports and explains why in the rationale. This is Premise 6 in action, not a design detail.
+
+**No-punishment rule for missed sessions.** A single missed day does not affect the habit trajectory (Lally et al. 2010, *Eur J Soc Psychol* 40:998, DOI 10.1002/ejsp.674). The 46 % intention–behaviour gap is normal (Rhodes & de Bruijn 2013, *Br J Health Psychol* 18:296, PMID 23480428). Adherence is not tracked as a streak or a punishment — the engine restores the plan smoothly, and only sustained deviation (multiple weeks below 4 sessions per Kaushal & Rhodes 2015 target) triggers an adaptation review.
+
+**BCT audit.** The BCT tags emitted on each prescription (see §6) feed a periodic audit that correlates BCTs used with outcome deltas — which techniques produce results for this athlete, which do not.
 
 **Text feedback ("today felt heavy, left leg tight").** Parsed by Claude into structured signals (localized fatigue flag, RPE inference, adherence flag). Structured signals go to the outcome track; the raw text is stored for auditability.
 
@@ -206,7 +226,19 @@ Project semver (`CLAUDE.md` §4, `CHANGELOG.md` when it exists) tracks system-le
 - Free Edition quotas on Model Serving endpoints and Vector Search (verified in workspace).
 - Fueling / nutrition ingestion (Precision Fuel & Hydration is a candidate partner per market addendum).
 
-## 12. Delta vs previous design
+## 12. Evidence gaps we accept
+
+Five sub-domains where peer-reviewed evidence is thin or absent (Premise 2a). The system labels claims in these areas as `low` or `very low` and does not overclaim:
+
+- Uncertainty communication in exercise prescription.
+- Formal elite → amateur extrapolation rules.
+- Adherence measurement resilient to legitimate life events.
+- Sycophancy as a formal construct in digital coaching (analogy via engagement quality — Torous 2018 / Baumel 2019 / Mohr 2017).
+- Adherence predictors for a 12-week amateur cycling plan specifically.
+
+In these gaps the system collects its own longitudinal data and treats it as `low` tier until enough accumulates to inform an internal cohort observation (still tagged `low`, never elevated to consensus).
+
+## 13. Delta vs previous design
 
 New or changed decisions produced by the second research pass:
 
