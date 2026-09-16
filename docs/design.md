@@ -101,6 +101,7 @@ Based on `training-science-extended.md` §2 (behavior) and §3 (noise variables)
 - Restrictions (time windows, mandatory rest days, injuries).
 - Measured HRmax (from incremental test; theoretical 220 − age is rejected per training-science-extended §4).
 - Power meter availability (drives HR-only fallback path).
+- **Context anchor** — typical time-of-day and location of training. Feeds the habit-formation model (Kaushal & Rhodes 2015, `training-science-extended.md` §2): repetition in a cue-consistent setting is a stronger predictor of habit strength than motivation. The prescription engine tries to keep prescriptions consistent with the anchor and flags proposals that would break it.
 
 **Explicitly not ingested (excluded by premise + peer-review evidence).**
 
@@ -137,16 +138,20 @@ Reranker + Reciprocal Rank Fusion unify results. Top-k is trimmed before it reac
 - Data snapshot used (CTL, HRV weekly trend, last-session load, days to target).
 - Cohort comparison (when available).
 - Peer-reviewed citation(s) supporting the choice of stimulus.
-- Confidence level and, when relevant, an `insufficient_evidence: true` block.
+- **Evidence tier per rationale line** (Premise 2 — peer-reviewed / qualified-coach / cohort observational / individual / model inference).
+- **Confidence level** — high / medium / low based on how directly the cited evidence applies to the athlete's context. HR-only prescriptions for amateur cyclists in tropical conditions are tagged `confidence: low` until the peer-review base grows (`training-science-extended.md` §1 gap note).
+- `insufficient_evidence: true` block when no tier ≤ 3 supports the claim.
 
 **Delivery.** Phase 1: chat with the athlete pushes the workout block for copy-paste. Phase 2: automated push to Intervals.icu via their API. Falls back gracefully if the API path fails.
 
 ## 7. Feedback loop
 
-**Two disjoint tracks** (agentic-rag-patterns §4 — sycophancy mitigation).
+**Two disjoint tracks** (Premise 6 — long-term progression over short-term satisfaction; agentic-rag-patterns §4 — sycophancy mitigation).
 
-- **Outcome track.** Fed by adherence, executed load vs prescribed, delta on FTP / CP / durability metrics, personal bests, target-event performance. Only this track informs future prescription models and evaluation datasets.
+- **Outcome track.** Fed by executed load vs prescribed, delta on FTP / CP / durability metrics, personal bests, target-event performance, injury/illness absence. Only this track informs future prescription models and evaluation datasets.
 - **Satisfaction track.** Fed by conversational sentiment, thumbs, comments. Used strictly for UX telemetry — never merged into training features.
+
+When the tracks disagree — the athlete loved a workout that peer-reviewed evidence says is under-stimulating for their phase — the engine prescribes what the evidence supports and explains why in the rationale. This is Premise 6 in action, not a design detail.
 
 **Text feedback ("today felt heavy, left leg tight").** Parsed by Claude into structured signals (localized fatigue flag, RPE inference, adherence flag). Structured signals go to the outcome track; the raw text is stored for auditability.
 
@@ -154,9 +159,9 @@ Reranker + Reciprocal Rank Fusion unify results. Top-k is trimmed before it reac
 
 ## 8. Safety guardrails
 
-Sourced from agentic-rag-patterns §3 and training-science-extended §2 (Meeusen 2013 overtraining consensus, Schwellnus 2016 IOC illness consensus).
+Sourced from Premise 3 (safety scope), agentic-rag-patterns §3, and training-science-extended §2 (Meeusen 2013 overtraining consensus, Schwellnus 2016 IOC illness consensus).
 
-**Red-flag scope guard.** Fixed list of terms/conditions that force the system to stop and refer to a professional: chest pain, unexpected dyspnea, syncope, neurological symptoms, acute injury, pregnancy without medical clearance, known unmanaged cardiac condition. Implemented as a classifier or ruleset upstream of the generator, not as a prompt instruction alone.
+**Red-flag scope guard.** The full red-flag list is defined in Premise 3. The engine runs the classifier upstream of the generator; a hit produces a fixed deferral response ("this needs a qualified professional; here are the next steps: ...") and blocks the normal prescription path. Prompt-only guardrails are not sufficient.
 
 **Load hard limits.** Weekly load delta capped (order-of-magnitude 10% rule as a starting point). Acute:chronic load ratio kept in the 0.8-1.3 band (Gabbett 2016). Requests to break these are refused with an explanation.
 
