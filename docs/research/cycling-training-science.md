@@ -6,13 +6,13 @@ Captured: 2026-09-16.
 
 ## 1. Load metrics: is CTL/ATL/TSB still the standard?
 
-- **PMC (Coggan) is still the industry default** in TrainingPeaks / Intervals.icu / WKO, but is increasingly framed as a **retrospective visualization tool, not a predictive model**. Consensus in coaching press (Roadman, TrainingPeaks coach blog 2024-25) is that PMC "shows what you did", not "what you can do".
+- **PMC (Coggan) is still the industry default** in TrainingPeaks / Intervals.icu / WKO, but is increasingly framed as a **retrospective visualization tool, not a predictive model**. Consensus in coaching press (Roadman, TrainingPeaks coach blog 2024-25) [not peer-reviewed; coaching commentary] is that PMC "shows what you did", not "what you can do".
 - **Documented weaknesses**: (a) TSS collapses everything to NP + FTP + duration, so a 300 TSS Z2 ride is treated ~= 300 TSS with 40 min VO2 work; (b) time constants (42/7 days) are population averages, not personalized; (c) TSB has weak evidence as a race-readiness predictor.
 - **Banister fitness-fatigue impulse-response**: the original math is fine, but Hellard et al. and Busso have shown poor future-performance prediction and instability of parameters when fit to individual athletes (PMC1974899, "Assessing the limitations of the Banister model"). Recent work extends it to 3-dimensional impulse-response (arXiv 2503.14841, 2025) but is still research-grade.
 - **Skiba's xPower / BikeScore / dCTL**: uses a 25s exponentially-weighted average (vs. Coggan's 30s rolling) anchored on CP rather than FTP. Same PMC shape, arguably better physiological grounding, but small user base outside GoldenCheetah. No large validation study.
 - **Xert's "Training Load" / Strain / MPA**: proprietary; not peer-reviewed. Marketing, not literature.
 - **HRV-guided load**: growing evidence base (see §3) — best treated as a **modulator** on top of a planned load, not a replacement for it.
-- **For amateurs**: consensus in coaching literature (Friel, CTS Time-Crunched, Roadman 2025-26) is that **absolute CTL ceiling is life-limited (~70-100 for most)** and ramp rate matters more than the number. Recommendation for the agent: keep PMC as a display / bookkeeping layer, do NOT use TSB as a hard readiness signal — combine with HRV + RPE + wellness (well-supported downstream in §3 and §5).
+- **For amateurs**: consensus in coaching literature (Friel *Cyclist's Training Bible*, CTS Time-Crunched, Roadman 2025-26) [not peer-reviewed; qualified-coach material synthesizing peer-reviewed sources per `docs/premises.md`] is that **absolute CTL ceiling is life-limited (~70-100 for most)** and ramp rate matters more than the number. Recommendation for the agent: keep PMC as a display / bookkeeping layer, do NOT use TSB as a hard readiness signal — combine with HRV + RPE + wellness (well-supported downstream in §3 and §5).
 
 ## 2. Intensity and capacity metrics: FTP vs LT2 vs MLSS vs CP + W'
 
@@ -146,6 +146,6 @@ Captured: 2026-09-16.
 - Mountjoy et al. 2018/2023, *BJSM* — REDs / energy availability.
 - Gabbett 2016, *BJSM* — acute:chronic workload ratio.
 - Frontiers AI 2025 (PMC12271085) — ML cardiac drift for responder classification.
-- Skiba GoldenCheetah source — xPower / BikeScore implementation.
+- Skiba GoldenCheetah source [not peer-reviewed; open-source reference implementation of xPower / BikeScore, by qualified coach Philip Skiba, MD].
 - Meta-analyses on TID: Rosenblat et al. 2019/2024, *Sports Medicine*; IJSPP 2023 systematic review of trained cyclists.
 - Buchheit & Laursen 2013, *Sports Medicine* — HIIT programming.
