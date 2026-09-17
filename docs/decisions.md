@@ -4,6 +4,24 @@ Chronological log of load-bearing project decisions. Newest entries at the top. 
 
 ---
 
+## 2026-09-16 — Infrastructure strategy: Vector Search, S3, and Terraform
+
+**Trigger.** Environment probe via Databricks CLI confirmed the Free Edition capabilities. Three open architectural questions were resolved: how to do vector search without an always-on endpoint, where to store source documents, and how to manage infrastructure primitives reproducibly.
+
+**Decisions.**
+
+1. **Vector Search — start with SQL Warehouse + `vector_cosine_similarity`.** The Serverless Starter Warehouse already exists and auto-starts on demand. For the initial corpus (estimated 5k–20k chunks), an exact cosine scan over a Delta table is fast enough and costs nothing beyond the warehouse that already exists. Option deferred: create a Databricks Vector Search Serverless endpoint when corpus grows past ~50k chunks or query latency becomes a UX issue. Fallback: FAISS serialized to S3 and loaded in a serverless job.
+
+2. **Storage — dedicated S3 bucket for document intake and index persistence.** The Databricks managed DBFS is opaque (no direct access to the underlying bucket). An explicit S3 bucket (`watts-up-coach-docs`) is the drop zone for raw PDFs before ingestion and the persistence layer for any serialized FAISS index. AWS S3 Free Tier (5 GB, permanent) covers this project's scale.
+
+3. **Infrastructure as Code — Terraform manages the AWS–Databricks bridge.** IAM roles, S3 bucket policies, Databricks instance profiles, Unity Catalog external locations, and secret scopes go in Terraform. Databricks Asset Bundle continues to own jobs, notebooks, and pipeline resources. The split is: Terraform = infrastructure primitives (exist outside application lifecycle), bundle = application resources (deploy with code). This choice also serves a learning goal: Terraform is a target technology for the user to learn through building.
+
+**Why not manage everything in the bundle.** The bundle lifecycle is tied to `databricks bundle deploy`, which runs per environment and per branch. Infrastructure primitives like IAM roles and S3 policies exist independently of which version of the application is deployed. Mixing them into the bundle creates a deployment dependency that is hard to reason about and impossible to share across unrelated workspaces.
+
+**Why not AWS OpenSearch for vector search.** OpenSearch Free Tier is 12 months only and requires a running instance (always-on cost after free period). The SQL Warehouse option is permanent, already available, and native to the stack.
+
+---
+
 ## 2026-09-16 — Deep-research refinement of premises 2-6
 
 **Trigger.** After committing the first cross-analysis (premises 2 through 6 in `docs/premises.md`) a deep-research pass was launched with two agents to find peer-reviewed and vendor-technical backing for the questions the analysis had opened. Both agents returned dense, verifiable content.
