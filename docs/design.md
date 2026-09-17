@@ -118,6 +118,47 @@ Based on `training-science-extended.md` §2 (behavior) and §3 (noise variables)
 
 - Self-Report Habit Index (SRHI, 12 items, Verplanken & Orbell 2003, *J Appl Soc Psychol* 33(6):1313). Tracks habit-strength trajectory against the Kaushal & Rhodes target (4 sessions/week for 6+ weeks in a stable context).
 
+**Bioimpedance (BIA) — optional, protocol-gated.**
+
+Peer-reviewed evidence supports BIA as a longitudinal training-monitoring input for cyclists (Marra et al. 2016, *Physiol Meas*, PMID 27243798 — direct evidence that phase angle drops during Grand Tour-style load; Giorgi et al. 2018, *J Sports Sci*, PMID 29708859 — BIVA discriminates cycling performance levels; Di Vincenzo, Marra & Scalfi 2019, *JISSN*, PMID 31694665 — phase-angle review in athletes) **if and only if** a strict protocol is followed and the system uses raw or intra-subject metrics, not absolute %BF.
+
+Accepted with evidence tier per Premise 2:
+
+| Metric | Tier | Reason |
+|---|---|---|
+| Phase angle (total and segmental) | high | Raw, no equation; validated in cyclists. |
+| BIVA vectors (R/H, Xc/H with tolerance ellipses) | high | Discriminates performance levels. |
+| Intra-subject Δ FFM with same device and equation | moderate | Valid only if protocol is constant (Moon 2013, *EJCN*, PMID 23299872). |
+| TBW via multi-frequency in stable euhydration | moderate | Adequate (Moon et al. 2010, *Br J Nutr*, PMID 20619077). |
+| Absolute %BF, cross-device or single-frequency deltas | low | Bias systematic (Yamada 2021, *J Cachexia Sarcopenia Muscle*, PMID 34101377). Not used for decisions. |
+
+**Device requirement.** Minimum: 8-electrode multi-frequency (whole-body) device that reports raw R and Xc. Foot-to-foot consumer scales accepted only as fallback and only with a 7-day rolling-mean filter.
+
+**Collection protocol** (mandatory for a reading to be ingested; Kyle et al. 2004, *Clin Nutr*, PMID 15556267; Campa et al. 2021 BIA standardisation; O'Brien, Young & Sawka 2002, *Int J Sports Med*, PMID 12165888):
+
+- Morning, within 30 min of waking.
+- Fasting ≥ 8 h (water allowed up to 2 h before).
+- No exercise ≥ 12 h, ideally ≥ 24 h.
+- No alcohol ≥ 24 h.
+- Post-void.
+- Same device, same electrode placement, same operator.
+- Log ambient temperature and body weight as covariates.
+- Female athletes: log menstrual-cycle phase and compare only within phase (Gleichauf & Roe 1989, *AJCN*, PMID 2816797).
+- Any reading that violates protocol is stored but flagged `protocol_violated=true` and not used in decisions.
+
+**Cadence.**
+
+- Weekly: raw R, Xc, phase angle, body weight. Filter with exponential moving average.
+- Every 4–6 weeks: formal intra-subject trend analysis of FFM / FM / TBW.
+- Pre and post each mesocycle: full assessment.
+
+**Interpretation rules the engine must respect.**
+
+- A sudden phase-angle drop can be dehydration, not cellular fatigue. Cross-check with weight change and wellness questionnaire before acting.
+- An apparent FFM gain within a day of a high-carb intake reflects glycogen + water, not muscle.
+- BIA is never a stand-alone trigger for a plan change; it only modulates signals already present in HRV, sRPE, wellness and load metrics.
+- Never prescribe an absolute %BF target from BIA data.
+
 **Explicitly not ingested (excluded by premise + peer-review evidence).**
 
 - Single-day resting HR (Buchheit 2014).
@@ -228,13 +269,14 @@ Project semver (`CLAUDE.md` §4, `CHANGELOG.md` when it exists) tracks system-le
 
 ## 12. Evidence gaps we accept
 
-Five sub-domains where peer-reviewed evidence is thin or absent (Premise 2a). The system labels claims in these areas as `low` or `very low` and does not overclaim:
+Sub-domains where peer-reviewed evidence is thin or absent (Premise 2a). The system labels claims in these areas as `low` or `very low` and does not overclaim:
 
 - Uncertainty communication in exercise prescription.
 - Formal elite → amateur extrapolation rules.
 - Adherence measurement resilient to legitimate life events.
 - Sycophancy as a formal construct in digital coaching (analogy via engagement quality — Torous 2018 / Baumel 2019 / Mohr 2017).
 - Adherence predictors for a 12-week amateur cycling plan specifically.
+- Long-horizon RCT for BIA in amateur cyclists; MDC (minimal detectable change) not published for consumer BIA devices in amateur endurance; consumer scales largely unvalidated against DXA in endurance athletes.
 
 In these gaps the system collects its own longitudinal data and treats it as `low` tier until enough accumulates to inform an internal cohort observation (still tagged `low`, never elevated to consensus).
 
