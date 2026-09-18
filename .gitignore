@@ -5,3 +5,11 @@ typings/
 __pycache__/
 *.pyc
 .vscode/
+
+# Secrets & credentials — never commit
+.aws/
+**/credentials
+*.pem
+.env
+*.env
+*.tfvars
