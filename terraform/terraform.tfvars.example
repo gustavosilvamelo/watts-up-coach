@@ -1,0 +1,9 @@
+# Copy this file to terraform.tfvars and fill in your values.
+# terraform.tfvars is gitignored — never commit real values.
+
+aws_region            = "us-east-1"
+s3_bucket_name        = "watts-up-coach-docs"
+databricks_host       = "https://dbc-xxxxxx.cloud.databricks.com"
+databricks_account_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+uc_metastore_id       = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+secret_scope_name     = "watts-up-coach"
